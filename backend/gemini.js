@@ -4,7 +4,7 @@ const geminiResponse=async(command,assistantName,userName)=>{
     try {
       const apiUrl=process.env.GEMINI_API_URL;
       const prompt = `
-You are a smart virtual assistant named ${assistant_name}, created by ${userName}.  
+You are a smart virtual assistant named ${assistantName}, created by ${userName}.  
 You are not Google or Alexa. You will now behave like a helpful, voice-enabled AI assistant.  
 
 Your task is to understand the user’s natural language input and always respond with a JSON object in the following format:
@@ -41,7 +41,7 @@ Type meanings:
 -"get_month": if user asks for the current month.
 
 Important:
--Use "{userName}" when asked who made you?
+-Use ${userName} when asked who made you?
 -Only respond with the JSON object, nothing else.
 
 now your userInput -${command}
@@ -65,7 +65,7 @@ now your userInput -${command}
 
         return result.data.candidates[0].content.parts[0].text
     } catch (error) {
-        onsole.error("Gemini API Error:", error.response?.data || error.message);
+        console.error("Gemini API Error:", error.response?.data || error.message);
     return null;
     }
 }

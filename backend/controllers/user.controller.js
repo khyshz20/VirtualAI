@@ -41,7 +41,7 @@ export const askToAssistant=async (req,res)=>{
     const user=await User.findById(req.userId);
     const userName=user.name
     const assistantName=user.assistantName
-    const result= await geminiResponse(command,userName,assistantName)
+    const result= await geminiResponse(command,assistantName,userName)
 
     const jsonMatch=result.match(/{[\s\S]*}/)
     if(!jsonMatch){
@@ -51,28 +51,28 @@ export const askToAssistant=async (req,res)=>{
     const type=gemResult.type
 
     switch(type){
-      case 'get-date' : 
+      case 'get_date' : 
           return res.json({
             type,
             userInput:gemResult.userInput,
             response:`current date is ${moment().format("YYYY-MM-DD")}`
           });
 
-      case 'get-time' : 
+      case 'get_time' : 
           return res.json({
             type,
             userInput:gemResult.userInput,
             response:`current time is ${moment().format("hh:mm:A")}`
           });
 
-      case 'get-day' : 
+      case 'get_day' : 
           return res.json({
             type,
             userInput:gemResult.userInput,
             response:`today is ${moment().format("dddd")}`
           });
 
-      case 'get-month' : 
+      case 'get_month' : 
           return res.json({
             type,
             userInput:gemResult.userInput,

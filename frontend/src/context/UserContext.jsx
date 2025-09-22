@@ -17,12 +17,17 @@ function UserContext({children}) {
       console.log(error);
     }
   }
-  const getGeminiResponse=async()=>{
+  const getGeminiResponse=async(command)=>{
     try {
-      const result=await axios.post(`${serverUrl}/api/user/asktoassistant`,{command},{withCredentials:true})
+      const result=await axios.post(`${serverUrl}/api/user/asktoassistant`,{command},{withCredentials:true});
       return result.data
     } catch (error) {
-      console.log(error)
+      console.error("Error fetching assistant response:", error);
+      return {
+        type: "error",
+        userInput: command,
+        response: "Something went wrong"
+      }
     }
   }
   useEffect(()=>{

@@ -1,9 +1,9 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { userDataContext } from '../context/UserContext'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 function Home() {
-  const {userData,serverUrl,setUserData}=useContext(userDataContext)
+  const {userData,serverUrl,setUserData,getGeminiResponse }=useContext(userDataContext)
   const navigate=useNavigate()
   const handleLogOut=async()=>{
     try {
@@ -16,7 +16,25 @@ function Home() {
     }
   }
 
+  useEffect(()=>{
+    const SpeechRecognition=window.SpeechRecognition || window.webkitSpeechRecognition
+    const recognition=new SpeechRecognition()
+    recognition.continuous=true;
+    recognition.lang='en-US';
+    
+    recognition.onresult=async (e)=>{
+      const transcript =e.results[e.results.length-1][0].transcript.trim()
+      console.log("heard: " + transcript)
 
+      if(transcript.toLowerCase().includes(userData.assistantName.toLowerCase())){
+      const data=await getGeminiResponse (transcript)
+      console.log("response: ",data.result)
+      
+      }
+    }
+
+    recognition.start();
+  }, []);
 
 
 
@@ -28,7 +46,7 @@ function Home() {
 <div className='w-[300px] h-[400px] flex justify-center items-center overflow-hidden rounded-4xl shadow-lg'>
  <img src={userData?.assistantImage} alt="" className='h-full object-cover'/>
 </div>
-<h1 className='text-white text-[18px] font-semibold'> Hi, I'm <span className='text-orange-500'>{userData.assistantName}</span></h1>
+<h1 className='text-white text-[18px] font-semibold'> Hi, I'm <span className='text-orange-500'>{userData?.assistantName}</span></h1>
     </div>
   )
 }
